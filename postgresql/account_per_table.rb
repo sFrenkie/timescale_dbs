@@ -23,7 +23,7 @@ begin
   puts 'Creating tables'
   HOUSES.times do |id|
     con.exec("DROP TABLE IF EXISTS same_value_#{id}")
-    con.exec("CREATE TABLE same_value_#{id}(id bigserial PRIMARY KEY, value REAL)")
+    con.exec("CREATE TABLE same_value_#{id}(id bigserial PRIMARY KEY, sensor_id SMALLINT, value REAL, timestamp TIMESTAMP)")
   end
   con&.close
 
@@ -35,7 +35,7 @@ begin
       con_t = PG.connect(dbname: PG_DB, user: PG_ROLE)
 
       (total_records / FORK_SIZE).times do |_i|
-        con_t.exec("INSERT INTO same_value_#{rand(HOUSES)}(value) VALUES(22.6)")
+        con_t.exec("INSERT INTO same_value_#{rand(HOUSES)}(sensor_id,value,timestamp) VALUES(#{rand(SENSOR_RECORDS)},22.6,'#{Time.now.strftime('%Y-%m-%d %H:%M:%S.%6N %z')}')")
       end
       con_t&.close
     rescue StandardError => e
