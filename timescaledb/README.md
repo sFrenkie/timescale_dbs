@@ -1,5 +1,8 @@
 # Prerequisities
 
+https://docs.timescale.com/latest/getting-started/installation
+I had some troubles to install RPM so I've build SRC 
+and if bootstrap had troubles I used this discussion https://github.com/timescale/timescaledb/issues/1655
 PostgreSQL with enabled timescaledb as preloaded library. Edito psql conf e.g.
 ```
 echo "shared_preload_libraries = 'timescaledb'" >> /home/franta/postgresql/11/data/postgresql.conf
