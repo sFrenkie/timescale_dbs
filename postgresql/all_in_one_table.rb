@@ -26,13 +26,17 @@ begin
   con&.close
   total_records = HOUSES * HOUSE_RECORDS_PER_DAY
   puts "Generating #{total_records} records by #{FORK_SIZE} concurrent process"
+  next_year = Time.new(2020, 1, 1)
   t_s = Time.now
   FORK_SIZE.times do
     fork do
       con_t = PG.connect(dbname: PG_DB, user: PG_ROLE)
+      time = Time.new(2019, 1, 1)
 
       (total_records / FORK_SIZE.to_f).ceil.times do |_i|
-        con_t.exec("INSERT INTO same_value(account,sensor_id,value,timestamp) VALUES(#{rand(SENSOR_RECORDS)}, #{rand(HOUSES)},22.6,'#{Time.now.strftime('%Y-%m-%d %H:%M:%S.%6N %z')}')")
+        time += 300
+        time = Time.new(2019, 1, 1) if time > next_year
+        con_t.exec("INSERT INTO same_value(account,sensor_id,value,timestamp) VALUES(#{rand(SENSOR_RECORDS)}, #{rand(HOUSES)},22.6,'#{time.strftime('%Y-%m-%d %H:%M:%S.%6N %z')}')")
       end
       con_t&.close
     rescue StandardError => e
